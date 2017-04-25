@@ -71,12 +71,23 @@ RUN set -ex; \
     # server tools
     && git clone https://github.com/OCA/server-tools.git --depth=1 --branch=${ODOO_VERSION} \
     && rm -Rf server-tools/.git* \
+
     # web
     && git clone https://github.com/OCA/web.git --depth=1 --branch=${ODOO_VERSION} \
     && rm -Rf web/.git* \
+
     # purchase-workflow
     && git clone https://github.com/OCA/purchase-workflow.git --depth=1 --branch=${ODOO_VERSION} \
     && rm -Rf purchase-workflow/.git* \
+
+    # purchase-workflow patch from acsone
+    && mkdir patch \
+    && cd patch \
+    && git clone https://github.com/acsone/purchase-workflow.git --depth=1 --branch=10-mig-purchase_request_to_rfq-ape \
+    && cp -R purchase-workflow/purchase_request_to_rfq/ /opt/odoo_addons/purchase-workflow/ \
+    && cd /opt/odoo_addons/ \
+    && rm -Rf purchase-workflow/.git* \
+
     # operating-unit
     # && git clone https://github.com/OCA/operating-unit.git --branch=${ODOO_VERSION}
     # && rm -Rf operating-unit/.git*
