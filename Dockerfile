@@ -38,9 +38,8 @@ RUN set -ex; \
     && echo '40e8b906de658a2221b15e4e8cd82565a47d7ee8 wkhtmltox.deb' | sha1sum -c - \
     && dpkg --force-depends -i wkhtmltox.deb \
     && apt-get -y install -f --no-install-recommends \
-    && pip install psycogreen==1.0 \
     && pip install cython --install-option="--no-cython-compile" \
-    && pip install peewee \
+    && pip install psycogreen==1.0 peewee xlsxwriter \
     && pip uninstall -y cython \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false wget gcc python-dev \
     && apt-get clean \
@@ -68,29 +67,42 @@ RUN set -ex; \
     && mkdir -p /opt/odoo_addons/ \
     && cd /opt/odoo_addons/ \
 
-    # server tools
+    # server tools from OCA
     && git clone https://github.com/OCA/server-tools.git --depth=1 --branch=${ODOO_VERSION} \
     && rm -Rf server-tools/.git* \
 
-    # web
+    # web from OCA
     && git clone https://github.com/OCA/web.git --depth=1 --branch=${ODOO_VERSION} \
     && rm -Rf web/.git* \
 
-    # purchase-workflow
+    # purchase-workflow from OCA
     && git clone https://github.com/OCA/purchase-workflow.git --depth=1 --branch=${ODOO_VERSION} \
     && rm -Rf purchase-workflow/.git* \
 
-    # purchase-workflow patch from acsone
-    && mkdir patch \
-    && cd patch \
-    && git clone https://github.com/acsone/purchase-workflow.git --depth=1 --branch=10-mig-purchase_request_to_rfq-ape \
-    && mv purchase-workflow/purchase_request_to_rfq/ /opt/odoo_addons/purchase-workflow/ \
-    && cd /opt/odoo_addons/ \
-    && rm -Rf patch \
+    # reporting-engine from OCA
+    && git clone https://github.com/OCA/reporting-engine.git --branch=${ODOO_VERSION}
+    && rm -Rf reporting-engine/.git*
 
     # operating-unit
     # && git clone https://github.com/OCA/operating-unit.git --branch=${ODOO_VERSION}
     # && rm -Rf operating-unit/.git*
+
+    # purchase-workflow patch from acsone
+    && mkdir acsone && cd acsone \
+    && git clone https://github.com/acsone/purchase-workflow.git --depth=1 --branch=10-mig-purchase_request_to_rfq-ape \
+    && mv purchase-workflow/purchase_request_to_rfq/ /opt/odoo_addons/purchase-workflow/ \
+    && cd /opt/odoo_addons/ \
+    && rm -Rf acsone \
+
+    # POS Addons from it-projects-llc
+    && mkdir it-projects-llc && cd it-projects-llc \
+    && git clone https://github.com/it-projects-llc/pos-addons.git --depth=1 --branch=10.0 \
+    && rm -Rf pos-addons/.git* && cd /opt/odoo_addons/ \
+
+    # CybroAddons from CybroOdoo / Cybrosys Techno Solutions
+    && mkdir CybroOdoo && cd CybroOdoo \
+    && git clone https://github.com/CybroOdoo/CybroAddons.git --depth=1 --branch=10.0 \
+    && rm -Rf CybroAddons/.git* && cd /opt/odoo_addons/ \
 
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
