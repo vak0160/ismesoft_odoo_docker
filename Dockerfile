@@ -80,12 +80,12 @@ RUN set -ex; \
     && rm -Rf purchase-workflow/.git* \
 
     # reporting-engine from OCA
-    && git clone https://github.com/OCA/reporting-engine.git --branch=${ODOO_VERSION}
-    && rm -Rf reporting-engine/.git*
+    && git clone https://github.com/OCA/reporting-engine.git --branch=${ODOO_VERSION} \
+    && rm -Rf reporting-engine/.git* \
 
     # operating-unit
-    # && git clone https://github.com/OCA/operating-unit.git --branch=${ODOO_VERSION}
-    # && rm -Rf operating-unit/.git*
+    # && git clone https://github.com/OCA/operating-unit.git --branch=${ODOO_VERSION} \
+    # && rm -Rf operating-unit/.git* \
 
     # purchase-workflow patch from acsone
     && mkdir acsone && cd acsone \
