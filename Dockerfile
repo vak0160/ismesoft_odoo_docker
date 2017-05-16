@@ -87,13 +87,6 @@ RUN set -ex; \
     # && git clone https://github.com/OCA/operating-unit.git --branch=${ODOO_VERSION} \
     # && rm -Rf operating-unit/.git* \
 
-    # purchase-workflow patch from acsone
-    && mkdir acsone && cd acsone \
-    && git clone https://github.com/acsone/purchase-workflow.git --depth=1 --branch=10-mig-purchase_request_to_rfq-ape \
-    && mv purchase-workflow/purchase_request_to_rfq/ /opt/odoo_addons/purchase-workflow/ \
-    && cd /opt/odoo_addons/ \
-    && rm -Rf acsone \
-
     # POS Addons from it-projects-llc
     && mkdir it-projects-llc && cd it-projects-llc \
     && git clone https://github.com/it-projects-llc/pos-addons.git --depth=1 --branch=10.0 \
