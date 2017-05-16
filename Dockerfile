@@ -39,7 +39,7 @@ RUN set -ex; \
     && dpkg --force-depends -i wkhtmltox.deb \
     && apt-get -y install -f --no-install-recommends \
     && pip install cython --install-option="--no-cython-compile" \
-    && pip install psycogreen==1.0 peewee xlsxwriter \
+    && pip install psycogreen==1.0 peewee xlrd xlsxwriter \
     && pip uninstall -y cython \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false wget gcc python-dev \
     && apt-get clean \
