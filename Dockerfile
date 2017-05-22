@@ -97,6 +97,11 @@ RUN set -ex; \
     && git clone https://github.com/CybroOdoo/CybroAddons.git --depth=1 --branch=10.0 \
     && rm -Rf CybroAddons/.git* && cd /opt/odoo_addons/ \
 
+    # l10n-indonesia from OCA & raditv
+    && mkdir raditv && cd raditv \
+    && git clone https://github.com/raditv/l10n-indonesia.git --depth=1 --branch=10.0 \
+    && rm -Rf raditv/.git* && cd /opt/odoo_addons/ \
+
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false git \
