@@ -74,7 +74,7 @@ case "$1" in
         exec gosu $CUID:$CGID odoo "$@" "${DB_ARGS[@]}"
         ;;
     *)
-        exec gosu $CUID:$CGID "$@"
+        exec "$@"
 esac
 
 exit 1
