@@ -75,6 +75,10 @@ RUN set -ex; \
     && git clone https://github.com/OCA/web.git --depth=1 --branch=${ODOO_VERSION} \
     && rm -Rf web/.git* \
 
+    # product-attribute from OCA
+    && git clone https://github.com/OCA/product-attribute.git --branch=${ODOO_VERSION} \
+    && rm -Rf product-attribute/.git* \
+
     # purchase-workflow from OCA
     && git clone https://github.com/OCA/purchase-workflow.git --depth=1 --branch=${ODOO_VERSION} \
     && rm -Rf purchase-workflow/.git* \
@@ -90,7 +94,8 @@ RUN set -ex; \
     # POS Addons from it-projects-llc
     && mkdir it-projects-llc && cd it-projects-llc \
     && git clone https://github.com/it-projects-llc/pos-addons.git --depth=1 --branch=10.0 \
-    && rm -Rf pos-addons/.git* && cd /opt/odoo_addons/ \
+    # remove product_brand module, overlap with OCA's product-attribute
+    && rm -Rf pos-addons/.git* && rm -Rf pos-addons/product_brand/ && cd /opt/odoo_addons/ \
 
     # CybroAddons from CybroOdoo / Cybrosys Techno Solutions
     && mkdir CybroOdoo && cd CybroOdoo \
