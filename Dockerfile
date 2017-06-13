@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM debian:stretch
 MAINTAINER Andre Kurniawan <andre.kurniawan@sibasistem.co.id>
 
 # Setup ENVs
@@ -52,8 +52,8 @@ RUN set -ex; \
     && echo 'deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main' | tee /etc/apt/sources.list.d/postgresql.list \
     && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
     && apt-get update \
-    && wget -O odoo.deb http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.20170309_all.deb \
-    && echo '8518a6a53288dc028ff77cb8b48ad53102d0a531 odoo.deb' | sha1sum -c - \
+    && wget -O odoo.deb http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.20170613_all.deb \
+    && echo '26201aaee763c0a24b431cc69f3d1602605e7a00 odoo.deb' | sha1sum -c - \
     && dpkg --force-depends -i odoo.deb \
     && apt-get -y install -f --no-install-recommends \
     && apt-get clean \
