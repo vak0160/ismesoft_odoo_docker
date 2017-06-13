@@ -34,6 +34,7 @@ RUN set -ex; \
         dh-python \
         python-watchdog \
         python-dev \
+        python-wheel \
         gcc \
     && wget -O wkhtmltox.deb http://nightly.odoo.com/extra/wkhtmltox-0.12.1.2_linux-jessie-amd64.deb \
     && echo '40e8b906de658a2221b15e4e8cd82565a47d7ee8 wkhtmltox.deb' | sha1sum -c - \
