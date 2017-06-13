@@ -1,4 +1,4 @@
-FROM debian:stretch
+FROM debian:jessie
 MAINTAINER Andre Kurniawan <andre.kurniawan@sibasistem.co.id>
 
 # Setup ENVs
@@ -7,7 +7,7 @@ ENV GOSU_VERSION=1.10 ODOO_RC=/etc/odoo/odoo.conf ODOO_VERSION=10.0
 # Gosu & certs
 RUN set -ex; \
     apt-get update \
-    && apt-get install -y --no-install-recommends wget ca-certificates gnupg dirmngr \
+    && apt-get install -y --no-install-recommends wget ca-certificates \
     && dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')" \
     && wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch" \
     && wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch.asc" \
@@ -29,12 +29,10 @@ RUN set -ex; \
         node-less \
         python-gevent \
         python-pip \
-        python-setuptools \
         python-renderpm \
-        dh-python \
+        python-support \
         python-watchdog \
         python-dev \
-        python-wheel \
         gcc \
     && wget -O wkhtmltox.deb http://nightly.odoo.com/extra/wkhtmltox-0.12.1.2_linux-jessie-amd64.deb \
     && echo '40e8b906de658a2221b15e4e8cd82565a47d7ee8 wkhtmltox.deb' | sha1sum -c - \
@@ -43,7 +41,7 @@ RUN set -ex; \
     && pip install cython --install-option="--no-cython-compile" \
     && pip install psycogreen==1.0 peewee xlrd xlsxwriter \
     && pip uninstall -y cython \
-    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false wget gcc python-dev python-setuptools \
+    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false wget gcc python-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* wkhtmltox.deb
 
