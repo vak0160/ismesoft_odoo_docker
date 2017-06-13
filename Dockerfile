@@ -7,7 +7,7 @@ ENV GOSU_VERSION=1.10 ODOO_RC=/etc/odoo/odoo.conf ODOO_VERSION=10.0
 # Gosu & certs
 RUN set -ex; \
     apt-get update \
-    && apt-get install -y --no-install-recommends wget ca-certificates \
+    && apt-get install -y --no-install-recommends wget ca-certificates gnupg \
     && dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')" \
     && wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch" \
     && wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch.asc" \
