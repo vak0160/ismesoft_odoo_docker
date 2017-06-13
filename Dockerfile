@@ -29,6 +29,7 @@ RUN set -ex; \
         node-less \
         python-gevent \
         python-pip \
+        python-setuptools \
         python-renderpm \
         dh-python \
         python-watchdog \
@@ -41,7 +42,7 @@ RUN set -ex; \
     && pip install cython --install-option="--no-cython-compile" \
     && pip install psycogreen==1.0 peewee xlrd xlsxwriter \
     && pip uninstall -y cython \
-    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false wget gcc python-dev \
+    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false wget gcc python-dev python-setuptools \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* wkhtmltox.deb
 
