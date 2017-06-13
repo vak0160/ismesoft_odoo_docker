@@ -30,7 +30,7 @@ RUN set -ex; \
         python-gevent \
         python-pip \
         python-renderpm \
-        python-support \
+        dh-python \
         python-watchdog \
         python-dev \
         gcc \
