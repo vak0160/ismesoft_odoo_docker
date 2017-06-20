@@ -122,7 +122,7 @@ COPY ./odoo.conf /etc/odoo/
 VOLUME ["/var/lib/odoo", "/mnt/extra-addons", "/mnt/extra-addons2", "/mnt/extra-addons3"]
 
 # Expose Odoo services
-EXPOSE 8069
+EXPOSE 8069 8072
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["odoo"]
