@@ -107,6 +107,11 @@ RUN set -ex; \
     && git clone https://github.com/raditv/l10n-indonesia.git --depth=1 --branch=10.0 \
     && rm -Rf raditv/.git* && cd /opt/odoo_addons/ \
 
+    # Account Parent from steigendit
+    && mkdir steigendit && cd steigendit \
+    && git clone https://github.com/steigendit/addons-steigend.git --depth=1 --branch=10.0 \
+    && rm -Rf steigendit/.git* && cd /opt/odoo_addons/ \
+
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false git \
