@@ -86,6 +86,8 @@ RUN set -ex; \
     # reporting-engine from OCA
     && git clone https://github.com/OCA/reporting-engine.git --branch=${ODOO_VERSION} \
     && rm -Rf reporting-engine/.git* \
+    # remove unported addons that causing problem
+    && rm -Rf reporting-engine/report_xls reporting-engine/base_report_assembler \
 
     # operating-unit
     # && git clone https://github.com/OCA/operating-unit.git --branch=${ODOO_VERSION} \
