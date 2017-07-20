@@ -65,13 +65,13 @@ case "$1" in
     -- | odoo)
         shift
         if [[ "$1" == "scaffold" ]] ; then
-            exec gosu $CUID:$CGID odoo "$@"
+            exec gosu $CUID:$CGID /opt/OCB/odoo-bin "$@"
         else
-            exec gosu $CUID:$CGID odoo "$@" "${DB_ARGS[@]}"
+            exec gosu $CUID:$CGID /opt/OCB/odoo-bin "$@" "${DB_ARGS[@]}"
         fi
         ;;
     -*)
-        exec gosu $CUID:$CGID odoo "$@" "${DB_ARGS[@]}"
+        exec gosu $CUID:$CGID /opt/OCB/odoo-bin "$@" "${DB_ARGS[@]}"
         ;;
     *)
         exec "$@"
