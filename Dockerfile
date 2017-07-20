@@ -4,11 +4,18 @@ MAINTAINER Andre Kurniawan <andre.kurniawan@sibasistem.co.id>
 # Setup ENVs
 ENV GOSU_VERSION=1.10 ODOO_RC=/etc/odoo/odoo.conf ODOO_VERSION=10.0
 
-# Gosu & certs
+# update latest debian & install wget + certs
 RUN set -ex; \
     apt-get update \
+    && apt-get upgrade --with-new-pkgs -y \
     && apt-get install -y --no-install-recommends wget ca-certificates \
-    && dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')" \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false
+
+# Gosu & certs
+RUN set -ex; \
+    dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')" \
     && wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch" \
     && wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch.asc" \
     && export GNUPGHOME="$(mktemp -d)" \
@@ -16,49 +23,53 @@ RUN set -ex; \
     && gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
     && rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc \
     && chmod +x /usr/local/bin/gosu \
-    && gosu nobody true \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false wget
+    && gosu nobody true
 
-# dependencies, wkhtmltopdf, postgresql apt list
+# Wkhtmltopdf
 RUN set -ex; \
     apt-get update \
-    && apt-get install -y --no-install-recommends \
-        wget \
-        node-less \
-        python-gevent \
-        python-pip \
-        python-renderpm \
-        python-support \
-        python-watchdog \
-        python-dev \
-        gcc \
     && wget -O wkhtmltox.deb http://nightly.odoo.com/extra/wkhtmltox-0.12.1.2_linux-jessie-amd64.deb \
     && echo '40e8b906de658a2221b15e4e8cd82565a47d7ee8 wkhtmltox.deb' | sha1sum -c - \
     && dpkg --force-depends -i wkhtmltox.deb \
     && apt-get -y install -f --no-install-recommends \
-    && pip install cython --install-option="--no-cython-compile" \
-    && pip install psycogreen==1.0 peewee xlrd xlsxwriter \
-    && pip uninstall -y cython \
-    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false wget gcc python-dev \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* wkhtmltox.deb
+    && rm -rf /var/lib/apt/lists/*
 
-# odoo & postgres client
+# latest postgresql client
 RUN set -ex; \
     apt-get update \
-    && apt-get install -y --no-install-recommends wget \
     && echo 'deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main' | tee /etc/apt/sources.list.d/postgresql.list \
     && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
     && apt-get update \
-    && wget -O odoo.deb http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.20170613_all.deb \
-    && echo '26201aaee763c0a24b431cc69f3d1602605e7a00 odoo.deb' | sha1sum -c - \
-    && dpkg --force-depends -i odoo.deb \
-    && apt-get -y install -f --no-install-recommends \
+    && apt-get install -y postgresql-client \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* odoo.deb \
-    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false wget
+    && rm -rf /var/lib/apt/lists/*
+
+# ODOO dependencies
+RUN set -ex; \
+    apt-get update \
+    && apt-get install -y --no-install-recommends python-pip node-less \
+        git python-dev gcc libxml2-dev libxslt1-dev libfreetype6-dev libjpeg62-turbo-dev libsasl2-dev libldap2-dev libssl-dev \
+    && pip install cython --install-option="--no-cython-compile" \
+    && pip install psycogreen==1.0 peewee xlrd xlsxwriter \
+    && pip uninstall -y cython \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false git python-dev gcc
+
+# Odoo & another dependecies
+RUN set -ex; \
+    apt-get update \
+    && apt-get install -y --no-install-recommends git \
+        libxml2-dev libxslt1-dev libfreetype6-dev libjpeg62-turbo-dev libsasl2-dev libldap2-dev libssl-dev \
+    && pip install cython --install-option="--no-cython-compile" \
+    && cd /opt/ \
+    && git clone --depth=1 --branch=10.0 https://github.com/OCA/OCB.git \
+    && pip install -r OCB/requirements.txt \
+    && pip uninstall -y cython \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false git libxml2-dev libxslt1-dev libfreetype6-dev libjpeg62-turbo-dev libsasl2-dev libldap2-dev libssl-dev
 
 # additional addons
 RUN set -ex; \
