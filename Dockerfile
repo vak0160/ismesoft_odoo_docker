@@ -50,6 +50,7 @@ RUN set -ex; \
     apt-get update \
     && apt-get install -y --no-install-recommends python-pip node-less \
         git python-dev build-essential \
+    && pip install -U pip \
     && pip install cython --install-option="--no-cython-compile" \
     && pip install psycogreen==1.0 peewee xlrd xlsxwriter \
     && pip uninstall -y cython \
