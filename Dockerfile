@@ -61,7 +61,7 @@ RUN set -ex; \
 # Odoo & another dependecies
 RUN set -ex; \
     apt-get update \
-    && apt-get install -y --no-install-recommends git build-essential \
+    && apt-get install -y --no-install-recommends git build-essential python-dev \
         libpq-dev libxml2-dev libxslt1-dev libfreetype6-dev libjpeg62-turbo-dev libsasl2-dev libldap2-dev libssl-dev \
     && pip install cython --install-option="--no-cython-compile" \
     && cd /opt/ \
@@ -71,7 +71,7 @@ RUN set -ex; \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false \
-        git build-essential libpq-dev libxml2-dev libxslt1-dev libfreetype6-dev libjpeg62-turbo-dev libsasl2-dev libldap2-dev libssl-dev
+        git build-essential python-dev libpq-dev libxml2-dev libxslt1-dev libfreetype6-dev libjpeg62-turbo-dev libsasl2-dev libldap2-dev libssl-dev
 
 # additional addons
 RUN set -ex; \
