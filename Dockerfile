@@ -49,13 +49,14 @@ RUN set -ex; \
 RUN set -ex; \
     apt-get update \
     && apt-get install -y --no-install-recommends python-pip node-less \
-        git python-dev gcc libxml2-dev libxslt1-dev libfreetype6-dev libjpeg62-turbo-dev libsasl2-dev libldap2-dev libssl-dev \
+        git python-dev build-essential \
     && pip install cython --install-option="--no-cython-compile" \
     && pip install psycogreen==1.0 peewee xlrd xlsxwriter \
     && pip uninstall -y cython \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
-    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false git python-dev gcc
+    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false \
+        git python-dev build-essential
 
 # Odoo & another dependecies
 RUN set -ex; \
@@ -69,7 +70,8 @@ RUN set -ex; \
     && pip uninstall -y cython \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
-    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false git libpq-dev libxml2-dev libxslt1-dev libfreetype6-dev libjpeg62-turbo-dev libsasl2-dev libldap2-dev libssl-dev
+    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false \
+        git libpq-dev libxml2-dev libxslt1-dev libfreetype6-dev libjpeg62-turbo-dev libsasl2-dev libldap2-dev libssl-dev
 
 # additional addons
 RUN set -ex; \
