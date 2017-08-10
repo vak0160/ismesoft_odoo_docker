@@ -52,8 +52,8 @@ extra_config "limit-time-real-cron" "$LIMIT_TIME_REAL_CRON"
 extra_config "limit-request" "$LIMIT_REQUEST"
 
 # Change uid based on env
-CUID=${CUID:-$(id -u odoo)}
-CGID=${CGID:-$(id -g odoo)}
+CUID=${CUID:-1000}
+CGID=${CGID:-1000}
 usermod -u $CUID odoo
 groupmod -g $GUID odoo
 usermod -g $CGID odoo

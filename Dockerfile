@@ -1,13 +1,6 @@
 FROM debian:jessie
 MAINTAINER Andre Kurniawan <andre.kurniawan@sibasistem.co.id>
 
-# Create User `odoo`
-ENV ODOO_UID=1000
-ENV ODOO_GID=1000
-RUN set -ex; \
-    addgroup --system --gid $ODOO_GID odoo \
-    && adduser --system --uid $ODOO_UID --gid $ODOO_GID --no-create-home odoo
-
 # All needed dependencies, pip included
 RUN set -ex; \
     apt-get update \
