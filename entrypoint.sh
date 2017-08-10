@@ -48,6 +48,9 @@ extra_config "limit-time-real" "$LIMIT_TIME_REAL"
 extra_config "limit-time-real-cron" "$LIMIT_TIME_REAL_CRON"
 extra_config "limit-request" "$LIMIT_REQUEST"
 
+DB_ARGS+=("--load")
+DB_ARGS+=("web,web_kanban,dbfilter_from_header,isme_db_debrand")
+
 # add custom user if $CUID or $GUID is set
 CUID=${CUID:-$(id -u odoo)}
 CGID=${CGID:-$(id -g odoo)}
