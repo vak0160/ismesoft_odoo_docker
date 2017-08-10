@@ -23,6 +23,9 @@ check_config "db_port" "$PORT"
 check_config "db_user" "$USER"
 check_config "db_password" "$PASSWORD"
 
+DB_ARGS+=("--load")
+DB_ARGS+=("web,web_kanban,dbfilter_from_header,isme_db_debrand")
+
 function extra_config() {
     param="$1"
     value="$2"
@@ -48,14 +51,9 @@ extra_config "limit-time-real" "$LIMIT_TIME_REAL"
 extra_config "limit-time-real-cron" "$LIMIT_TIME_REAL_CRON"
 extra_config "limit-request" "$LIMIT_REQUEST"
 
-DB_ARGS+=("--load")
-DB_ARGS+=("web,web_kanban,dbfilter_from_header,isme_db_debrand")
-
 # add custom user if $CUID or $GUID is set
 CUID=${CUID:-$(id -u odoo)}
 CGID=${CGID:-$(id -g odoo)}
-[ $(getent group $CGID) ] || groupadd user --gid $CGID
-id -u $CUID &> /dev/null || useradd --gid $CGID --uid $CUID --no-create-home --no-user-group --shell /bin/bash user
 
 # change owner
 chown -R $CUID:$CGID /etc/odoo/

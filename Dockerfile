@@ -1,31 +1,18 @@
 FROM debian:jessie
 MAINTAINER Andre Kurniawan <andre.kurniawan@sibasistem.co.id>
 
-# Setup ENVs
-ENV GOSU_VERSION=1.10 ODOO_RC=/etc/odoo/odoo.conf ODOO_VERSION=10.0
-
-# Gosu & certs
+# Create User `odoo`
+ENV ODOO_UID=1000
+ENV ODOO_GID=1000
 RUN set -ex; \
-    apt-get update \
-    && apt-get install -y --no-install-recommends wget ca-certificates \
-    && dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')" \
-    && wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch" \
-    && wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch.asc" \
-    && export GNUPGHOME="$(mktemp -d)" \
-    && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 \
-    && gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
-    && rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc \
-    && chmod +x /usr/local/bin/gosu \
-    && gosu nobody true \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false wget
+    adduser --uid $ODOO_UID --gid $ODOO_GID --no-create-home odoo
 
-# dependencies, wkhtmltopdf, postgresql apt list
+# All needed dependencies, pip included
 RUN set -ex; \
     apt-get update \
     && apt-get install -y --no-install-recommends \
         wget \
+        ca-certificates \
         node-less \
         python-gevent \
         python-pip \
@@ -34,33 +21,57 @@ RUN set -ex; \
         python-watchdog \
         python-dev \
         gcc \
-    && wget -O wkhtmltox.deb http://nightly.odoo.com/extra/wkhtmltox-0.12.1.2_linux-jessie-amd64.deb \
-    && echo '40e8b906de658a2221b15e4e8cd82565a47d7ee8 wkhtmltox.deb' | sha1sum -c - \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Update latest pip & install odoo deps using pip
+RUN set -ex; \
+    && pip install --upgrade pip \
+    && pip install cython --install-option="--no-cython-compile" \
+    && pip install psycogreen==1.0 peewee xlrd xlsxwriter
+
+# Gosu
+ENV GOSU_VERSION=1.10
+RUN set -ex; \
+    dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')" \
+    && wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch" \
+    && wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch.asc" \
+    && export GNUPGHOME="$(mktemp -d)" \
+    && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 \
+    && gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
+    && rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc \
+    && chmod +x /usr/local/bin/gosu \
+    && gosu nobody true
+
+# wkhtmltopdf
+ENV WKHTMLTOPDF_URL=http://nightly.odoo.com/extra/wkhtmltox-0.12.1.2_linux-jessie-amd64.deb
+ENV WKHTMLTOPDF_HASH=40e8b906de658a2221b15e4e8cd82565a47d7ee8
+RUN set -ex; \
+    wget -O wkhtmltox.deb $WKHTMLTOPDF_URL \
+    && echo '$WKHTMLTOPDF_HASH wkhtmltox.deb' | sha1sum -c - \
+    && apt-get update \
     && dpkg --force-depends -i wkhtmltox.deb \
     && apt-get -y install -f --no-install-recommends \
-    && pip install cython --install-option="--no-cython-compile" \
-    && pip install psycogreen==1.0 peewee xlrd xlsxwriter \
-    && pip uninstall -y cython \
-    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false wget gcc python-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* wkhtmltox.deb
 
-# odoo & postgres client
+# Postgres List & Odoo
+ENV ODOO_RC=/etc/odoo/odoo.conf
+ENV ODOO_VERSION=10.0
+ENV ODOO_DATE=20170613
+ENV ODOO_HASH=26201aaee763c0a24b431cc69f3d1602605e7a00
 RUN set -ex; \
-    apt-get update \
-    && apt-get install -y --no-install-recommends wget \
-    && echo 'deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main' | tee /etc/apt/sources.list.d/postgresql.list \
+    echo 'deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main' | tee /etc/apt/sources.list.d/postgresql.list \
     && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
     && apt-get update \
-    && wget -O odoo.deb http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.20170613_all.deb \
-    && echo '26201aaee763c0a24b431cc69f3d1602605e7a00 odoo.deb' | sha1sum -c - \
+    && wget -O odoo.deb http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.{ODOO_DATE}_all.deb \
+    && echo '$ODOO_HASH odoo.deb' | sha1sum -c - \
     && dpkg --force-depends -i odoo.deb \
     && apt-get -y install -f --no-install-recommends \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* odoo.deb \
-    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false wget
+    && rm -rf /var/lib/apt/lists/* odoo.deb
 
-# db list/manager debranding by us
+# db list/manager debranding by ISMESoft
 COPY ./isme_db_debrand /opt/odoo_addons/ismesoft/isme_db_debrand
 
 # additional addons
@@ -129,7 +140,7 @@ COPY ./entrypoint.sh /
 COPY ./odoo.conf /etc/odoo/
 
 # Mount /var/lib/odoo to allow restoring filestore and /mnt/extra-addons for users addons
-VOLUME ["/var/lib/odoo", "/mnt/extra-addons", "/mnt/extra-addons2", "/mnt/extra-addons3"]
+VOLUME ["/var/lib/odoo"]
 
 # Expose Odoo services
 EXPOSE 8069 8072
