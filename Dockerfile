@@ -49,7 +49,7 @@ ENV WKHTMLTOPDF_URL=http://nightly.odoo.com/extra/wkhtmltox-0.12.1.2_linux-jessi
 ENV WKHTMLTOPDF_HASH=40e8b906de658a2221b15e4e8cd82565a47d7ee8
 RUN set -ex; \
     wget -O wkhtmltox.deb $WKHTMLTOPDF_URL \
-    && echo '$WKHTMLTOPDF_HASH wkhtmltox.deb' | sha1sum -c - \
+    && echo $WKHTMLTOPDF_HASH wkhtmltox.deb | sha1sum -c - \
     && apt-get update \
     && dpkg --force-depends -i wkhtmltox.deb \
     && apt-get -y install -f --no-install-recommends \
@@ -66,7 +66,7 @@ RUN set -ex; \
     && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
     && apt-get update \
     && wget -O odoo.deb http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.{ODOO_DATE}_all.deb \
-    && echo '$ODOO_HASH odoo.deb' | sha1sum -c - \
+    && echo $ODOO_HASH odoo.deb | sha1sum -c - \
     && dpkg --force-depends -i odoo.deb \
     && apt-get -y install -f --no-install-recommends \
     && apt-get clean \
