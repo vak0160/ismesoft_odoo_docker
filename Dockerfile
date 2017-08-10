@@ -65,7 +65,7 @@ RUN set -ex; \
     echo 'deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main' | tee /etc/apt/sources.list.d/postgresql.list \
     && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
     && apt-get update \
-    && wget -O odoo.deb http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.{ODOO_DATE}_all.deb \
+    && wget -O odoo.deb http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_DATE}_all.deb \
     && echo $ODOO_HASH odoo.deb | sha1sum -c - \
     && dpkg --force-depends -i odoo.deb \
     && apt-get -y install -f --no-install-recommends \
