@@ -60,12 +60,19 @@ RUN set -ex; \
     && rm -rf /var/lib/apt/lists/* odoo.deb \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false wget
 
+# db list/manager debranding by us
+COPY ./isme_db_debrand /opt
+
 # additional addons
 RUN set -ex; \
     apt-get update \
     && apt-get -y --no-install-recommends install git \
     && mkdir -p /opt/odoo_addons/ \
     && cd /opt/odoo_addons/ \
+
+    # DB debrand, move into folder
+    && mkdir -p /opt/odoo_addons/ismesoft/
+    && mv /opt/isme_db_debrand /opt/odoo_addons/ismesoft/
 
     # server tools from OCA
     && git clone https://github.com/OCA/server-tools.git --depth=1 --branch=${ODOO_VERSION} \
