@@ -55,7 +55,7 @@ extra_config "limit-request" "$LIMIT_REQUEST"
 CUID=${CUID:-1000}
 CGID=${CGID:-1000}
 usermod -u $CUID odoo
-groupmod -g $GUID odoo
+groupmod -g $CGID odoo
 usermod -g $CGID odoo
 
 # change owner
