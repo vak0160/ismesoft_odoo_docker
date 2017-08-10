@@ -27,7 +27,7 @@ RUN set -ex; \
 
 # Update latest pip & install odoo deps using pip
 RUN set -ex; \
-    && pip install --upgrade pip \
+    pip install --upgrade pip \
     && pip install cython --install-option="--no-cython-compile" \
     && pip install psycogreen==1.0 peewee xlrd xlsxwriter
 

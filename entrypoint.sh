@@ -51,9 +51,12 @@ extra_config "limit-time-real" "$LIMIT_TIME_REAL"
 extra_config "limit-time-real-cron" "$LIMIT_TIME_REAL_CRON"
 extra_config "limit-request" "$LIMIT_REQUEST"
 
-# add custom user if $CUID or $GUID is set
+# Change uid based on env
 CUID=${CUID:-$(id -u odoo)}
 CGID=${CGID:-$(id -g odoo)}
+usermod -u $CUID odoo
+groupmod -g $GUID odoo
+usermod -g $CGID odoo
 
 # change owner
 chown -R $CUID:$CGID /etc/odoo/
