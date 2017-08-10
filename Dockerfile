@@ -61,7 +61,7 @@ RUN set -ex; \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false wget
 
 # db list/manager debranding by us
-COPY ./isme_db_debrand /opt
+COPY ./isme_db_debrand /opt/opt/odoo_addons/ismesoft/isme_db_debrand
 
 # additional addons
 RUN set -ex; \
@@ -69,10 +69,6 @@ RUN set -ex; \
     && apt-get -y --no-install-recommends install git \
     && mkdir -p /opt/odoo_addons/ \
     && cd /opt/odoo_addons/ \
-
-    # DB debrand, move into folder
-    && mkdir -p /opt/odoo_addons/ismesoft/ \
-    && mv /opt/isme_db_debrand /opt/odoo_addons/ismesoft/ \
 
     # server tools from OCA
     && git clone https://github.com/OCA/server-tools.git --depth=1 --branch=${ODOO_VERSION} \
