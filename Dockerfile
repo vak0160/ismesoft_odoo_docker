@@ -61,7 +61,7 @@ RUN set -ex; \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false wget
 
 # db list/manager debranding by us
-COPY ./isme_db_debrand /opt/opt/odoo_addons/ismesoft/isme_db_debrand
+COPY ./isme_db_debrand /opt/odoo_addons/ismesoft/isme_db_debrand
 
 # additional addons
 RUN set -ex; \
