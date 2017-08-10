@@ -71,8 +71,8 @@ RUN set -ex; \
     && cd /opt/odoo_addons/ \
 
     # DB debrand, move into folder
-    && mkdir -p /opt/odoo_addons/ismesoft/
-    && mv /opt/isme_db_debrand /opt/odoo_addons/ismesoft/
+    && mkdir -p /opt/odoo_addons/ismesoft/ \
+    && mv /opt/isme_db_debrand /opt/odoo_addons/ismesoft/ \
 
     # server tools from OCA
     && git clone https://github.com/OCA/server-tools.git --depth=1 --branch=${ODOO_VERSION} \
