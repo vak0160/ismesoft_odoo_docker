@@ -22,7 +22,7 @@ RUN set -ex; \
 RUN set -ex; \
     pip install --upgrade pip \
     && pip install cython --install-option="--no-cython-compile" \
-    && pip install psycogreen==1.0 peewee xlrd xlsxwriter
+    && pip install psycogreen==1.0 peewee xlrd xlsxwriter httpagentparser
 
 # Gosu
 ENV GOSU_VERSION=1.10
