@@ -75,6 +75,9 @@ RUN set -ex; \
     && mkdir -p /opt/odoo_addons/ \
     && cd /opt/odoo_addons/ \
 
+    # Prepare OCA addons directory
+    && mkdir OCA && cd OCA \
+
     # server tools from OCA
     && git clone https://github.com/OCA/server-tools.git --depth=1 --branch=${ODOO_VERSION} \
     && rm -Rf server-tools/.git* \
@@ -91,6 +94,10 @@ RUN set -ex; \
     && git clone https://github.com/OCA/purchase-workflow.git --depth=1 --branch=${ODOO_VERSION} \
     && rm -Rf purchase-workflow/.git* \
 
+    # vertical-association from OCA
+    && git clone https://github.com/OCA/vertical-association.git --depth=1 --branch=${ODOO_VERSION} \
+    && rm -Rf vertical-association/.git* \
+
     # reporting-engine from OCA
     && git clone https://github.com/OCA/reporting-engine.git --branch=${ODOO_VERSION} \
     && rm -Rf reporting-engine/.git* \
@@ -100,6 +107,9 @@ RUN set -ex; \
     # operating-unit
     # && git clone https://github.com/OCA/operating-unit.git --branch=${ODOO_VERSION} \
     # && rm -Rf operating-unit/.git* \
+
+    # Return to normal addons folder
+    && cd /opt/odoo_addons/ \
 
     # POS Addons from it-projects-llc
     && mkdir it-projects-llc && cd it-projects-llc \
