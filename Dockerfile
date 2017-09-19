@@ -98,6 +98,10 @@ RUN set -ex; \
     && git clone https://github.com/OCA/vertical-association.git --depth=1 --branch=${ODOO_VERSION} \
     && rm -Rf vertical-association/.git* \
 
+    # hr from OCA
+    && git clone https://github.com/OCA/hr.git --depth=1 --branch=${ODOO_VERSION} \
+    && rm -Rf hr/.git* \
+
     # reporting-engine from OCA
     && git clone https://github.com/OCA/reporting-engine.git --branch=${ODOO_VERSION} \
     && rm -Rf reporting-engine/.git* \
@@ -131,6 +135,11 @@ RUN set -ex; \
     && mkdir steigendit && cd steigendit \
     && git clone https://github.com/steigendit/addons-steigend.git --depth=1 --branch=10.0 \
     && rm -Rf steigendit/.git* && cd /opt/odoo_addons/ \
+
+    # HR Holidays Multi Levels Approval from baamtu
+    && mkdir baamtu && cd baamtu \
+    && git clone http://github.com/baamtu/hr_holidays_multi_levels_approval.git --depth=1 --branch=${ODOO_VERSION} \
+    && rm -Rf hr_holidays_multi_levels_approval/.git* && cd /opt/odoo_addons/ \
 
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
