@@ -11,6 +11,11 @@ set -e
 
 : ${ODOO_CONF:=${ODOO_RC:='/var/lib/odoo/odoo.conf'}}
 
+# Copy conf file if not exists
+if [ -e $ODOO_CONF ] ; then
+    cp /etc/odoo/odoo.conf $ODOO_CONF
+fi;
+
 DB_ARGS=()
 DB_ARGS+=("--config")
 DB_ARGS+=("$ODOO_CONF")
@@ -69,11 +74,6 @@ chown $CUID:$CGID /var/lib/odoo
 chown $CUID:$CGID /mnt/extra-addons
 chown $CUID:$CGID /mnt/extra-addons2
 chown $CUID:$CGID /mnt/extra-addons3
-
-# Copy conf file if not exists
-if [ -e $ODOO_CONF ] then
-    cp /etc/odoo/odoo.conf $ODOO_CONF
-fi;
 
 case "$1" in
     -- | odoo)
