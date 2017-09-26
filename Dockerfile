@@ -50,7 +50,7 @@ RUN set -ex; \
     && rm -rf /var/lib/apt/lists/* wkhtmltox.deb
 
 # Postgres List & Odoo
-ENV ODOO_RC=/etc/odoo/odoo.conf
+ENV ODOO_RC=/var/lib/odoo/odoo.conf
 ENV ODOO_VERSION=10.0
 ENV ODOO_DATE=20170613
 ENV ODOO_HASH=26201aaee763c0a24b431cc69f3d1602605e7a00
