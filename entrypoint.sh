@@ -71,6 +71,7 @@ usermod -g $CGID odoo
 # change owner
 chown -R $CUID:$CGID /etc/odoo/
 chown $CUID:$CGID /var/lib/odoo
+chown $CUID:$CGID /var/lib/odoo/odoo.conf
 chown $CUID:$CGID /mnt/extra-addons
 chown $CUID:$CGID /mnt/extra-addons2
 chown $CUID:$CGID /mnt/extra-addons3
