@@ -12,7 +12,7 @@ set -e
 : ${ODOO_CONF:=${ODOO_RC:='/var/lib/odoo/odoo.conf'}}
 
 # Copy conf file if not exists
-if [ -e $ODOO_CONF ] ; then
+if [ ! -e $ODOO_CONF ] ; then
     cp /etc/odoo/odoo.conf $ODOO_CONF
 fi;
 
