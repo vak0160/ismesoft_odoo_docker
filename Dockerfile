@@ -102,6 +102,10 @@ RUN set -ex; \
     && git clone https://github.com/OCA/hr.git --depth=1 --branch=${ODOO_VERSION} \
     && rm -Rf hr/.git* \
 
+    # multi company from OCA
+    && git clone https://github.com/OCA/multi-company.git --depth=1 --branch=${ODOO_VERSION} \
+    && rm -Rf multi-company/.git* \
+
     # reporting-engine from OCA
     && git clone https://github.com/OCA/reporting-engine.git --branch=${ODOO_VERSION} \
     && rm -Rf reporting-engine/.git* \
